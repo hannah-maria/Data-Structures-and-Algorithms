@@ -1,0 +1,14 @@
+#include <iostream>
+using namespace std;
+struct person{
+    int age;
+};
+int main()
+{
+    struct person *ptr2,p1,p2;
+    ptr2=&p2;
+    cin>>(*ptr2).age;
+    cout<<(*ptr2).age;
+  
+    return 0;
+}
