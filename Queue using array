@@ -1,0 +1,102 @@
+#include <stdio.h>
+int queue[100],rear,front,i,x,n;
+void enqueue(){
+    if(rear>=n-1){
+        printf("Queue is full/Overflow condition");
+    }
+    else{ 
+        if(front==-1){
+        front++;
+        }
+        printf("Enter value to insert");
+        scanf("%d",&x);
+        rear++;
+        queue[rear]=x;
+    }
+}
+void dequeue(){
+    if(rear<=-1){
+        printf("Queue is empty/Underflow condition");
+    }
+    else{
+        printf("Item removed is %d\n",queue[front]);
+        front++;
+    }
+}
+void display(){
+    if(front<=-1){
+        printf("Queue empty\n");
+    }
+    else{
+        for(i=front;i<=rear;i++){
+            printf("%d -> ",queue[i]);
+        }
+    }
+}
+void isFull(){
+    if(rear-front>=n-1){
+        printf("Queue is full\n");
+    }
+    else{
+        printf("Queue is not full\n");
+    }
+}
+void isEmpty(){
+    if(rear<=-1){
+        printf("Queue is empty\n");
+    }
+    else{
+        printf("Queue is not empty\n");
+    }
+}
+int main(){
+    front=-1;
+    rear=-1;
+    printf("Enter size of queue");
+    scanf("%d",&n);
+    int choice;
+    printf("\tQUEUE OPERATIONS\n");
+    printf("\t----------------\n");
+    printf("\t1.\tENQUEUE\n\t2.\tDEQUEUE\n\t3.\tDISPLAY\n\t4.\tISFULL\n\t5.\tisEmpty\n\t6.\tExit\n");
+    do{
+        printf("Enter your choice");
+        scanf("%d",&choice);
+        switch(choice){
+            case 1:{
+                enqueue();
+                break;
+            }
+            case 2:{
+                dequeue();
+                break;
+            }
+            case 3:{
+                display();
+                break;
+            }
+            case 4:{
+                isFull();
+                break;
+            }
+            case 5:{
+                isEmpty();
+                break;
+            }
+            case 6:{
+                printf("Exit point");
+                break;
+            }
+            default:{
+                printf("Enter valid choice");
+            }
+        }
+    }
+    while(choice!=6);
+}
+
+
+
+
+
+
+
