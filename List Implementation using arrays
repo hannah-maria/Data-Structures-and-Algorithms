@@ -1,0 +1,79 @@
+#include <iostream>
+
+class ArrayList {
+private:
+    int* array;
+    int size;
+    int capacity;
+
+public:
+    ArrayList(int initialCapacity = 10) {
+        capacity = initialCapacity;
+        array = new int[capacity];
+        size = 0;
+    }
+
+    ~ArrayList() {
+        delete[] array;
+    }
+
+    void insert(int value) {
+        if (size >= capacity) {
+            // Resize the array if it's full
+            capacity *= 2;
+            int* newArray = new int[capacity];
+            for (int i = 0; i < size; i++) {
+                newArray[i] = array[i];
+            }
+            delete[] array;
+            array = newArray;
+        }
+        array[size] = value;
+        size++;
+    }
+
+    void remove(int value) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (array[i] == value) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index != -1) {
+            for (int i = index; i < size - 1; i++) {
+                array[i] = array[i + 1];
+            }
+            size--;
+        }
+    }
+
+    void display() {
+        for (int i = 0; i < size; i++) {
+            std::cout << array[i] << " ";
+        }
+        std::cout << std::endl;
+    }
+};
+
+int main() {
+    ArrayList myList;
+
+    myList.insert(10);
+    myList.insert(20);
+    myList.insert(30);
+    myList.insert(40);
+    myList.insert(50);
+
+    std::cout << "List elements: ";
+    myList.display();
+
+    myList.remove(30);
+    myList.remove(10);
+
+    std::cout << "List elements after removal: ";
+    myList.display();
+
+    return 0;
+}
