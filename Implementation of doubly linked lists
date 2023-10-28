@@ -1,0 +1,162 @@
+#include <iostream>
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node* prev;
+
+    Node(int value) {
+        data = value;
+        next = nullptr;
+        prev = nullptr;
+    }
+};
+
+class DoublyLinkedList {
+private:
+    Node* head;
+    Node* tail;
+
+public:
+    DoublyLinkedList() {
+        head = nullptr;
+        tail = nullptr;
+    }
+
+    // Insert a new element at the beginning of the doubly linked list.
+    void insertAtBeginning(int value) {
+        Node* newNode = new Node(value);
+        if (head == nullptr) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+    }
+
+    // Insert a new element at the end of the doubly linked list.
+    void insertAtEnd(int value) {
+        Node* newNode = new Node(value);
+        if (tail == nullptr) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode->prev = tail;
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    // Insert a new element at a given position in the doubly linked list.
+    void insertAtPosition(int value, int position) {
+        if (position <= 0) {
+            std::cout << "Invalid position." << std::endl;
+            return;
+        }
+
+        if (position == 1 || head == nullptr) {
+            insertAtBeginning(value);
+            return;
+        }
+
+        Node* newNode = new Node(value);
+        Node* current = head;
+        int currentPos = 1;
+
+        while (currentPos < position - 1 && current != nullptr) {
+            current = current->next;
+            currentPos++;
+        }
+
+        if (current == nullptr) {
+            // Insert at the end if the position is beyond the current list size.
+            newNode->prev = tail;
+            tail->next = newNode;
+            tail = newNode;
+        } else {
+            newNode->next = current;
+            newNode->prev = current->prev;
+            if (current->prev != nullptr) {
+                current->prev->next = newNode;
+            }
+            current->prev = newNode;
+            if (current == head) {
+                head = newNode;
+            }
+        }
+    }
+
+    // Delete the first element from the doubly linked list.
+    void deleteFromBeginning() {
+        if (head == nullptr) {
+            return; // Empty list, nothing to delete.
+        }
+
+        Node* temp = head;
+        head = head->next;
+        if (head != nullptr) {
+            head->prev = nullptr;
+        } else {
+            tail = nullptr;
+        }
+        delete temp;
+    }
+
+    // Delete the last element from the doubly linked list.
+    void deleteFromEnd() {
+        if (tail == nullptr) {
+            return; // Empty list, nothing to delete.
+        }
+
+        Node* temp = tail;
+        tail = tail->prev;
+        if (tail != nullptr) {
+            tail->next = nullptr;
+        } else {
+            head = nullptr;
+        }
+        delete temp;
+    }
+
+    // Display the elements in the doubly linked list.
+    void display() {
+        Node* current = head;
+        while (current != nullptr) {
+            std::cout << current->data << " ";
+            current = current->next;
+        }
+        std::cout << std::endl;
+    }
+
+    // Destructor to free memory.
+    ~DoublyLinkedList() {
+        Node* current = head;
+        while (current != nullptr) {
+            Node* temp = current;
+            current = current->next;
+            delete temp;
+        }
+    }
+};
+
+int main() {
+    DoublyLinkedList myList;
+
+    myList.insertAtBeginning(10);
+    myList.insertAtEnd(20);
+    myList.insertAtPosition(30, 2);
+
+    std::cout << "Doubly Linked List elements: ";
+    myList.display();
+
+    myList.deleteFromBeginning();
+    myList.deleteFromEnd();
+
+    std::cout << "Doubly Linked List elements after deletion: ";
+    myList.display();
+
+    return 0;
+}
