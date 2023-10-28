@@ -1,0 +1,51 @@
+#include <iostream>
+using namespace std;
+
+struct emp {
+    int emp_id;
+    char emp_name[20];
+    int emp_salary;
+    char emp_desig[20];
+};
+
+int main() {
+    emp emp1, emp2;
+
+    emp1.emp_id = 772;
+    emp2.emp_id = 740;
+
+    // Assign emp_name without strcpy
+    const char* name1 = "Hannah";
+    const char* name2 = "Cavin";
+    for (int i = 0; i < 20; i++) {
+        if (name1[i] != '\0') {
+            emp1.emp_name[i] = name1[i];
+        }
+        if (name2[i] != '\0') {
+            emp2.emp_name[i] = name2[i];
+        }
+    }
+
+    const char* desig1 = "Manager";
+    const char* desig2 = "Manager";
+    for (int i = 0; i < 20; i++) {
+        if (desig1[i] != '\0') {
+            emp1.emp_desig[i] = desig1[i];
+        }
+        if (desig2[i] != '\0') {
+            emp2.emp_desig[i] = desig2[i];
+        }
+    }
+
+    emp1.emp_salary = 50000;
+    emp2.emp_salary = 55000;
+
+    if (strcmp(emp1.emp_desig, emp2.emp_desig) == 0) {
+        emp2.emp_salary = emp1.emp_salary;
+    }
+
+    cout << "Salary of emp1 is " << emp1.emp_salary << endl;
+    cout << "Salary of emp2 is " << emp2.emp_salary << endl;
+
+    return 0;
+}
