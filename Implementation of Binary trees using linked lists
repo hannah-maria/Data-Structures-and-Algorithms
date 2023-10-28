@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <stdlib.h> // Include this for malloc
+struct node {
+    int data;
+    struct node *left, *right;
+};
+
+struct node *root = NULL;
+
+struct node *create(int data) {
+    struct node *new_node = (struct node *)malloc(sizeof(struct node));
+    new_node->data = data;
+    new_node->left = NULL;
+    new_node->right = NULL;
+    return new_node;
+}
+
+struct node *insert(struct node *root, int data) {
+    if (root == NULL)
+        return create(data);
+
+    if (root->left==NULL) {
+        root->left = insert(root->left, data);
+    } else {
+        root->right = insert(root->right, data);
+    }
+    return root;
+}
+
+void pre_order(struct node *root) {
+    if (root == NULL)
+        return;
+    printf("%d ", root->data);
+    pre_order(root->left);
+    pre_order(root->right);
+}
+
+void inorderTraversal(struct node *root) {
+    if (root == NULL)
+        return;
+    inorderTraversal(root->left);
+    printf("%d ", root->data);
+    inorderTraversal(root->right);
+}
+
+void postorderTraversal(struct node *root) {
+    if (root == NULL)
+        return;
+    postorderTraversal(root->left);
+    postorderTraversal(root->right);
+    printf("%d ", root->data);
+}
+int main() {
+     int inputValue;
+     char choice1;
+
+    do {
+        printf("Enter a value to insert into the binary tree: ");
+        scanf("%d", &inputValue);
+
+        root = insert(root, inputValue);
+        
+        // Clear the input buffer
+        while ((getchar()) != '\n');
+
+        printf("Do you want to insert another value? (y/n): ");
+        scanf(" %c", &choice1); // Note the space before %c to consume the newline character
+
+    } while (choice1 == 'y' || choice1 == 'Y');
+
+    printf("TRAVERSAL TYPES\n");
+    printf("1.INORDER\n2.PREORDER\n3.POSTORDER\n4.DISPLAY THE TREE");
+    int choice2;
+    do{
+    printf("\nEnter your choice: ");
+    scanf("%d", &choice2);
+    switch (choice2) {
+        case 1:
+            printf("Inorder Traversal: ");
+            inorderTraversal(root);
+            break;
+        case 2:
+            printf("Preorder Traversal: ");
+            pre_order(root);
+            break;
+        case 3:
+            printf("Postorder Traversal: ");
+            postorderTraversal(root);
+            break;
+        case 4:
+            printf("Exit");
+            break;
+        default:
+            printf("Invalid choice\n");
+     }
+    }while(choice2!=4);
+    return 0;
+}
