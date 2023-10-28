@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_NODES 100
+
+int binaryTree[MAX_NODES];
+int next = 0;  // Index of the next available slot in the array
+
+void insert(int data) {
+    if (next < MAX_NODES) {
+        binaryTree[next] = data;
+        next++;
+    } else {
+        printf("Binary tree is full. Cannot insert more nodes.\n");
+    }
+}
+
+void pre_order(int index) {
+    if (index < next) {
+        printf("%d ", binaryTree[index]);
+        pre_order(2 * index + 1);  // Left child
+        pre_order(2 * index + 2);  // Right child
+    }
+}
+
+void inorderTraversal(int index) {
+    if (index < next) {
+        inorderTraversal(2 * index + 1);  // Left child
+        printf("%d ", binaryTree[index]);
+        inorderTraversal(2 * index + 2);  // Right child
+    }
+}
+
+void postorderTraversal(int index) {
+    if (index < next) {
+        postorderTraversal(2 * index + 1);  // Left child
+        postorderTraversal(2 * index + 2);  // Right child
+        printf("%d ", binaryTree[index]);
+    }
+}
+
+int main() {
+    int inputValue;
+    char choice1;
+
+    do {
+        printf("Enter a value to insert into the binary tree: ");
+        scanf("%d", &inputValue);
+
+        insert(inputValue);
+
+        printf("Do you want to insert another value? (y/n): ");
+        scanf(" %c", &choice1);
+
+    } while ((choice1 == 'y' || choice1 == 'Y') && next < MAX_NODES);
+
+    printf("TRAVERSAL TYPES\n");
+    printf("1.INORDER\n2.PREORDER\n3.POSTORDER\n4.EXIT");
+    int choice2;
+    do {
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice2);
+        switch (choice2) {
+            case 1:
+                printf("Inorder Traversal: ");
+                inorderTraversal(0);  // Start from the root
+                break;
+            case 2:
+                printf("Preorder Traversal: ");
+                pre_order(0);  // Start from the root
+                break;
+            case 3:
+                printf("Postorder Traversal: ");
+                postorderTraversal(0);  // Start from the root
+                break;
+            case 4:
+                printf("Exit\n");
+                break;
+            default:
+                printf("Invalid choice\n");
+        }
+    } while (choice2 != 4);
+
+    return 0;
+}
+
