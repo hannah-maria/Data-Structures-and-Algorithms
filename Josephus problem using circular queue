@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Queue {
+    struct Node* front;
+    struct Node* rear;
+};
+
+struct Queue* createQueue() {
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->front = queue->rear = NULL;
+    return queue;
+}
+
+void enqueue(struct Queue* queue, int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+
+    if (queue->rear == NULL) {
+        queue->front = queue->rear = newNode;
+        newNode->next = queue->front;
+    } else {
+        queue->rear->next = newNode;
+        queue->rear = newNode;
+    }
+}
+
+int dequeue(struct Queue* queue) {
+    if (queue->front == NULL) {
+        printf("Queue is empty\n");
+        return -1;
+    }
+
+    int data = queue->front->data;
+    struct Node* temp = queue->front;
+
+    if (queue->front == queue->rear) {
+        queue->front = queue->rear = NULL;
+    } else {
+        queue->front = queue->front->next;
+        queue->rear->next = queue->front;
+    }
+
+    free(temp);
+    return data;
+}
+
+void josephus(int n, int k) {
+    struct Queue* queue = createQueue();
+
+    // Enqueue all people from 1 to n
+    for (int i = 1; i <= n; i++) {
+        enqueue(queue, i);
+    }
+
+    // Start the elimination process
+    printf("Elimination order: ");
+    while (queue->front != NULL) {
+        for (int i = 1; i < k; i++) {
+            int eliminated = dequeue(queue);
+            printf("%d, ", eliminated);
+            enqueue(queue, eliminated);
+        }
+
+        int survivor = dequeue(queue);
+        printf("%d\n", survivor);
+
+        if (queue->front != NULL) {
+            printf("Next round: ");
+        }
+    }
+}
+
+int main() {
+    int n, k;
+    printf("Enter the number of people (n): ");
+    scanf("%d", &n);
+    printf("Enter the counting interval (k): ");
+    scanf("%d", &k);
+
+    josephus(n, k);
+
+    return 0;
+}
