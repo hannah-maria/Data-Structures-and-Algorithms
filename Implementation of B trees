@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+
+const int MAX_KEYS = 3; // Define the maximum number of keys in a node (adjust as needed)
+
+class BTreeNode {
+    bool isLeaf;
+    std::vector<int> keys;
+    std::vector<BTreeNode*> children;
+
+public:
+    BTreeNode(bool leaf = true) : isLeaf(leaf) {}
+
+    bool isFull() const {
+        return keys.size() >= MAX_KEYS;
+    }
+
+    void insert(int key) {
+        if (isLeaf) {
+            // Insert the key in a sorted order
+            auto it = keys.begin();
+            while (it != keys.end() && key > *it) {
+                ++it;
+            }
+            keys.insert(it, key);
+        } else {
+            int i = 0;
+            while (i < keys.size() && key > keys[i]) {
+                ++i;
+            }
+            children[i]->insert(key);
+            if (children[i]->isFull()) {
+                splitChild(i);
+                if (key > keys[i]) {
+                    ++i;
+                }
+            }
+            keys.insert(keys.begin() + i, children[i]->keys.back());
+            children[i]->keys.pop_back();
+        }
+    }
+
+    void splitChild(int i) {
+        BTreeNode* newChild = new BTreeNode(isLeaf);
+        keys.insert(keys.begin() + i, children[i]->keys.back());
+        children.insert(children.begin() + i + 1, newChild);
+        newChild->keys.assign(children[i]->keys.begin() + MAX_KEYS / 2, children[i]->keys.end());
+        children[i]->keys.erase(children[i]->keys.begin() + MAX_KEYS / 2, children[i]->keys.end());
+    }
+
+    void display() {
+        for (int i = 0; i < keys.size(); ++i) {
+            std::cout << keys[i] << " ";
+        }
+        if (!isLeaf) {
+            for (int i = 0; i < children.size(); ++i) {
+                children[i]->display();
+            }
+        }
+    }
+};
+
+class BTree {
+    BTreeNode* root;
+
+public:
+    BTree() : root(nullptr) {}
+
+    void insert(int key) {
+        if (root == nullptr) {
+            root = new BTreeNode(true);
+            root->insert(key);
+        } else {
+            if (root->isFull()) {
+                BTreeNode* newRoot = new BTreeNode(false);
+                newRoot->children.push_back(root);
+                newRoot->splitChild(0);
+                root = newRoot;
+            }
+            root->insert(key);
+        }
+    }
+
+    void display() {
+        if (root != nullptr) {
+            root->display();
+        }
+        std::cout << std::endl;
+    }
+};
+
+int main() {
+    BTree tree;
+
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(5);
+    tree.insert(30);
+    tree.insert(15);
+    tree.insert(25);
+
+    std::cout << "B-tree contents: ";
+    tree.display();
+
+    return 0;
+}
